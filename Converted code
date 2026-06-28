@@ -7,6 +7,8 @@ import math
 brain=Brain()
 
 # Robot configuration code
+# true = reversed, false = normal
+
 top_left = Motor(Ports.PORT3, GearSetting.RATIO_6_1, False)
 bottom_left = Motor(Ports.PORT4, GearSetting.RATIO_18_1, False)
 top_right = Motor(Ports.PORT13, GearSetting.RATIO_18_1, True)
@@ -42,7 +44,7 @@ print("\033[2J")
 
 #endregion VEXcode Generated Robot Configuration
 
-
+# this section below was made using block code
 def when_started1():
     global topLeftScale, strafePower, leftPower, rightPower, drivePower, turnPower
     topLeftScale = 0.33
