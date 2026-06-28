@@ -1,0 +1,68 @@
+#region VEXcode Generated Robot Configuration
+from vex import *
+import urandom
+import math
+
+# Brain should be defined by default
+brain=Brain()
+
+# Robot configuration code
+top_left = Motor(Ports.PORT3, GearSetting.RATIO_6_1, False)
+bottom_left = Motor(Ports.PORT4, GearSetting.RATIO_18_1, False)
+top_right = Motor(Ports.PORT13, GearSetting.RATIO_18_1, True)
+bottom_right = Motor(Ports.PORT11, GearSetting.RATIO_18_1, True)
+center_motor = Motor(Ports.PORT1, GearSetting.RATIO_36_1, False)
+controller_1 = Controller(PRIMARY)
+
+
+# wait for rotation sensor to fully initialize
+wait(30, MSEC)
+
+
+# Make random actually random
+def initializeRandomSeed():
+    wait(100, MSEC)
+    random = brain.battery.voltage(MV) + brain.battery.current(CurrentUnits.AMP) * 100 + brain.timer.system_high_res()
+    urandom.seed(int(random))
+      
+# Set random seed 
+initializeRandomSeed()
+
+
+def play_vexcode_sound(sound_name):
+    # Helper to make playing sounds from the V5 in VEXcode easier and
+    # keeps the code cleaner by making it clear what is happening.
+    print("VEXPlaySound:" + sound_name)
+    wait(5, MSEC)
+
+# add a small delay to make sure we don't print in the middle of the REPL header
+wait(200, MSEC)
+# clear the console to make sure we don't have the REPL in the console
+print("\033[2J")
+
+#endregion VEXcode Generated Robot Configuration
+
+
+def when_started1():
+    global topLeftScale, strafePower, leftPower, rightPower, drivePower, turnPower
+    topLeftScale = 0.33
+    while True:
+        drivePower = controller_1.axis3.position()
+        turnPower = controller_1.axis4.position()
+        strafePower = controller_1.axis1.position()
+        leftPower = drivePower + turnPower
+        rightPower = drivePower - turnPower
+        top_left.set_velocity((leftPower * topLeftScale), PERCENT)
+        top_left.spin(FORWARD)
+        bottom_left.set_velocity(leftPower, PERCENT)
+        bottom_left.spin(FORWARD)
+        top_right.set_velocity(rightPower, PERCENT)
+        top_right.spin(FORWARD)
+        bottom_right.set_velocity(rightPower, PERCENT)
+        bottom_right.spin(FORWARD)
+        center_motor.set_velocity(strafePower, PERCENT)
+        center_motor.spin(FORWARD)
+        wait(0.02, SECONDS)
+        wait(5, MSEC)
+
+when_started1()
